@@ -135,8 +135,41 @@ Weak Signal (IC 0-0.5): Low confidence association
 No Signal: No significant association detected
 
 The Information Component (IC) is the primary metric. Higher values indicate stronger associations.
+
 Technical Details
 Algorithm: Bayesian Confidence Propagation Neural Network (BCPNN)
-Data Source: FDA Adverse Event Reporting System (FAERS), 2025 Q3
+Data Source: FDA Adverse Event Reporting System (FAERS), 2024 Q3
 Dependencies: csv, collections, math (Python standard library)
 Processing Time: 5-30 minutes depending on system specifications
+Troubleshooting
+FileNotFoundError
+
+Verify DRUG24Q3.txt and REAC24Q3.txt are in the project directory
+Check file names match exactly (case-sensitive)
+
+No module errors
+
+Verify Python interpreter is correctly configured in PyCharm
+Standard library modules should be available by default
+
+Program runs but no output
+
+Check the Run panel at the bottom of PyCharm for error messages
+Ensure data files are not corrupted (DRUG file ~200MB, REAC file ~100MB)
+
+Slow performance
+
+Normal for first run with large dataset
+Close unnecessary applications
+Allow 10-30 minutes for complete processing
+
+Drug-ADR pair not found
+
+Spelling must match FDA database exactly
+Try generic drug names (e.g., "ibuprofen" not "Advil")
+Pair may not exist in the dataset
+
+Data Information
+Source: FDA Adverse Event Reporting System (FAERS)
+Period: Q3 2025 (July - September 2025)(first 5000 entries)
+Note: This data represents reported associations, not proven causation.

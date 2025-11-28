@@ -58,8 +58,8 @@ def write_out(a_parameters,b_parameters,g_parameters,alp_fname,bet_fname,g_fname
 				writer.writerow([drug,adr,g_parameters[drug][adr]])
 
 start=time.time()
-drug_reports=bd.drug_data("DRUG25Q3.txt")
-adr_reports=bd.adr_data("REAC25Q3.txt")
+drug_reports=bd.drug_data("./data/DRUG25Q3.txt")
+adr_reports=bd.adr_data("./data/REAC25Q3.txt")
 drug_set=set()
 adr_set=set()
 

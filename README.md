@@ -195,7 +195,7 @@ python bcpnn.py
 
 ### Complete Execution Screenshot
 
-![Program Output](outputs/run_summary.png)
+![Program Output](./outputs/run_summary.png)
 
 ### Understanding the Output
 
@@ -231,63 +231,48 @@ No strong signals detected in this sample dataset.
 
 With only 5000 entries, strong signals are rare. Full datasets would show suspicious combinations here.
 
-**4. Interactive Query:**
-```
-Required Drug: CYCLOSPORINE
-Required ADR: Tremor
-Negative Signal
-```
-
-The program allows checking any specific drug-ADR combination.
-
 ---
 
-## 🔍 Interactive Queries
+## 📊 Analyzing Results
 
-After processing completes, you can query any drug-ADR pair:
+### How to View Detected Signals
 
-### Example Queries
+After the program completes, all results are saved to CSV files in the `outputs/` folder. To analyze specific drug-ADR pairs:
 
+**Method 1: Open gamma.csv**
+1. Navigate to `outputs/gamma.csv`
+2. Open in Excel, Google Sheets, or any CSV viewer
+3. Search for your drug-ADR pair of interest
+4. Check the IC value and signal classification
+
+**Method 2: Filter in Spreadsheet**
 ```
-Required Drug: aspirin
-Required ADR: bleeding
+Column A: Drug name
+Column B: ADR name
+Column C: IC (Information Component)
+Column D: Signal strength (Weak/Medium/Strong/None)
 ```
 
+### Understanding the Data
+
+For each drug-ADR pair in `gamma.csv`, you'll see:
+
+| Column | Meaning |
+|--------|---------|
+| **Drug** | Drug name from FAERS |
+| **ADR** | Adverse reaction name |
+| **IC** | Information Component score |
+| **Signal** | Classification (None/Weak/Medium/Strong) |
+
+**Example row:**
 ```
-Required Drug: metformin
-Required ADR: diarrhea
-```
-
-```
-Required Drug: warfarin
-Required ADR: bruising
-```
-
-### Understanding Query Results
-
-For each pair, the system shows:
-
-| Value | Meaning |
-|-------|---------|
-| **a** | Reports with BOTH drug and ADR together |
-| **b** | Reports with drug but NOT this ADR |
-| **c** | Reports with ADR but NOT this drug |
-| **d** | Reports with NEITHER |
-
-**Example:**
-```
-Drug: ASPIRIN
-ADR: HEADACHE
-a=5, b=120, c=450, d=31061
-
-Signal: WEAK
-IC = 0.23
+ASPIRIN, HEADACHE, 0.23, Weak
 ```
 
 **Interpretation:**  
-- Only 5 reports link aspirin + headache
-- When **a** is small relative to **b**, **c**, **d**, the signal is weak or absent
-- This suggests NO unusual association
+- IC = 0.23 indicates weak association
+- This means aspirin-headache co-occurrence is slightly higher than random chance
+- Not strong enough to be a safety concern
 
 ---
 
@@ -411,10 +396,9 @@ BCPNN can optionally use prior knowledge through an `adr-drug.csv` file.
 
 ### Example Scenario
 
-If the program shows:
+If you find in `gamma.csv`:
 ```
-WARFARIN - BLEEDING
-Strong Signal (IC = 3.2)
+WARFARIN, BLEEDING, 3.2, Strong
 ```
 
 **This means:**

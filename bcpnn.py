@@ -1,147 +1,173 @@
-import bcpnn_data as bd 
-import bcpnn_parameters as bp 
+import bcpnn_data as bd
+import bcpnn_parameters as bp
 import time
 import csv
 from collections import defaultdict
 import sys
 
+
 def func():
-	return(1)
+    return (1)
+
 
 def func1():
-	a={}
-	a['alp']=2
-	a['alp1']=1
-	return(a)
+    a = {}
+    a['alp'] = 2
+    a['alp1'] = 1
+    return (a)
+
+
 def func2():
-	b={}
-	b['bet']=2
-	b['bet1']=1
-	return(b)
+    b = {}
+    b['bet'] = 2
+    b['bet1'] = 1
+    return (b)
 
-def read_parameters(alp_fname,bet_fname,g_fname):
-	g_parameter_matrix=defaultdict(lambda:defaultdict(func))
-	a_parameter_matrix=defaultdict(func1)
-	b_parameter_matrix=defaultdict(func2)
-	with open(g_fname,'rt') as f:
-		data=csv.reader(f)
-		for row in data:
-			g_parameter_matrix[row[0]][row[1]]=float(row[2])
-	with open(alp_fname,'rt') as f:
-		data=csv.reader(f)
-		for row in data:
-			a_parameter_matrix[row[0]]={}
-			a_parameter_matrix[row[0]]['alp']=float(row[1])
-			a_parameter_matrix[row[0]]['alp1']=float(row[2])
-	with open(bet_fname,'rt') as f:
-		data=csv.reader(f)
-		for row in data:
-			b_parameter_matrix[row[0]]={}
-			b_parameter_matrix[row[0]]['bet']=float(row[1])
-			b_parameter_matrix[row[0]]['bet1']=float(row[2])
 
-	return a_parameter_matrix,b_parameter_matrix,g_parameter_matrix
+def read_parameters(alp_fname, bet_fname, g_fname):
+    g_parameter_matrix = defaultdict(lambda: defaultdict(func))
+    a_parameter_matrix = defaultdict(func1)
+    b_parameter_matrix = defaultdict(func2)
+    with open(g_fname, 'rt') as f:
+        data = csv.reader(f)
+        for row in data:
+            g_parameter_matrix[row[0]][row[1]] = float(row[2])
+    with open(alp_fname, 'rt') as f:
+        data = csv.reader(f)
+        for row in data:
+            a_parameter_matrix[row[0]] = {}
+            a_parameter_matrix[row[0]]['alp'] = float(row[1])
+            a_parameter_matrix[row[0]]['alp1'] = float(row[2])
+    with open(bet_fname, 'rt') as f:
+        data = csv.reader(f)
+        for row in data:
+            b_parameter_matrix[row[0]] = {}
+            b_parameter_matrix[row[0]]['bet'] = float(row[1])
+            b_parameter_matrix[row[0]]['bet1'] = float(row[2])
 
-def write_out(a_parameters,b_parameters,g_parameters,alp_fname,bet_fname,g_fname):
-	with open(alp_fname,'w') as file:
-		writer=csv.writer(file,delimiter=',')
-		for key in a_parameters.keys():
-			writer.writerow([key,a_parameters[key]['alp'],a_parameters[key]['alp1']])
-	with open(bet_fname,'w') as file:
-		writer=csv.writer(file,delimiter=',')
-		for key in b_parameters.keys():
-			writer.writerow([key,b_parameters[key]['bet'],b_parameters[key]['bet1']])
-	with open(g_fname,'w') as file:
-		writer=csv.writer(file,delimiter=',')
-		for drug in g_parameters.keys():
-			for adr in g_parameters[drug].keys():
-				writer.writerow([drug,adr,g_parameters[drug][adr]])
+    return a_parameter_matrix, b_parameter_matrix, g_parameter_matrix
 
-start=time.time()
-drug_reports=bd.drug_data("./data/DRUG25Q3.txt")
-adr_reports=bd.adr_data("./data/REAC25Q3.txt")
-drug_set=set()
-adr_set=set()
+
+def write_out(a_parameters, b_parameters, g_parameters, alp_fname, bet_fname, g_fname):
+    with open(alp_fname, 'w') as file:
+        writer = csv.writer(file, delimiter=',')
+        for key in a_parameters.keys():
+            writer.writerow([key, a_parameters[key]['alp'], a_parameters[key]['alp1']])
+    with open(bet_fname, 'w') as file:
+        writer = csv.writer(file, delimiter=',')
+        for key in b_parameters.keys():
+            writer.writerow([key, b_parameters[key]['bet'], b_parameters[key]['bet1']])
+    with open(g_fname, 'w') as file:
+        writer = csv.writer(file, delimiter=',')
+        for drug in g_parameters.keys():
+            for adr in g_parameters[drug].keys():
+                writer.writerow([drug, adr, g_parameters[drug][adr]])
+
+
+start = time.time()
+drug_reports = bd.drug_data("./data/DRUG25Q3.txt")
+adr_reports = bd.adr_data("./data/REAC25Q3.txt")
+drug_set = set()
+adr_set = set()
 
 for key in drug_reports.keys():
-	for drug in drug_reports[key]:
-		drug_set.add(drug)
+    for drug in drug_reports[key]:
+        drug_set.add(drug)
 
 for key in adr_reports.keys():
-	for adr in adr_reports[key]:
-		adr_set.add(adr)
+    for adr in adr_reports[key]:
+        adr_set.add(adr)
 
-count=0
-drug_matrix=defaultdict(lambda:defaultdict(int))
-drug_counts=defaultdict(int)
-adr_counts=defaultdict(int)
-N=0
+count = 0
+drug_matrix = defaultdict(lambda: defaultdict(int))
+drug_counts = defaultdict(int)
+adr_counts = defaultdict(int)
+N = 0
 for key in drug_reports.keys():
-	for drug in drug_reports[key]:
-		for adr in adr_reports[key]:	
-			drug_matrix[drug][adr]+=1
-			adr_counts[adr]+=1
-			drug_counts[drug]+=1
-			N+=1
-			
-a_parameters,b_parameters,g_parameters=read_parameters("./outputs/alpha.csv","./outputs/beta.csv","./outputs/gamma.csv")
+    for drug in drug_reports[key]:
+        for adr in adr_reports[key]:
+            drug_matrix[drug][adr] += 1
+            adr_counts[adr] += 1
+            drug_counts[drug] += 1
+            N += 1
 
-tuple_set=set()
+a_parameters, b_parameters, g_parameters = read_parameters("./outputs/alpha.csv", "./outputs/beta.csv",
+                                                           "./outputs/gamma.csv")
+
+tuple_set = set()
 for drug in drug_matrix.keys():
-	for adr in drug_matrix[drug].keys():
-		tuple_set.add((drug,adr))
+    for adr in drug_matrix[drug].keys():
+        tuple_set.add((drug, adr))
 for drug in g_parameters.keys():
-	for adr in g_parameters[drug].keys():
-		tuple_set.add((drug,adr))
+    for adr in g_parameters[drug].keys():
+        tuple_set.add((drug, adr))
 
-new_signals=[]
-c1=0
-c2=0
-c3=0
+new_signals = []
+c1 = 0
+c2 = 0
+c3 = 0
 for t in list(tuple_set):
-		adr=t[1]
-		drug=t[0]
-		count+=1
-		a=drug_matrix[drug][adr]
-		b=drug_counts[drug]-a
-		c=adr_counts[adr]-a
-		d=N-(a+b+c)
-		g11=g_parameters[drug][adr]
-		alp=a_parameters[drug]['alp']
-		alp1=a_parameters[drug]['alp1']
-		bet=b_parameters[adr]['bet']
-		bet1=b_parameters[adr]['bet1']
-		signal_generated=bp.signal_output(a,b,c,d,g11,alp,bet,alp1,bet1)
-		if(signal_generated=='Weak Signal'):
-			c1+=1
-		elif(signal_generated=='Medium Signal'):
-			c2+=1
-		elif(signal_generated=='Strong Signal'):
-			c3+=1
-		new_signals.append((drug,adr,signal_generated))
+    adr = t[1]
+    drug = t[0]
+    count += 1
+    a = drug_matrix[drug][adr]
+    b = drug_counts[drug] - a
+    c = adr_counts[adr] - a
+    d = N - (a + b + c)
+    g11 = g_parameters[drug][adr]
+    alp = a_parameters[drug]['alp']
+    alp1 = a_parameters[drug]['alp1']
+    bet = b_parameters[adr]['bet']
+    bet1 = b_parameters[adr]['bet1']
+    signal_generated = bp.signal_output(a, b, c, d, g11, alp, bet, alp1, bet1)
+    if (signal_generated == 'Weak Signal'):
+        c1 += 1
+    elif (signal_generated == 'Medium Signal'):
+        c2 += 1
+    elif (signal_generated == 'Strong Signal'):
+        c3 += 1
+    new_signals.append((drug, adr, signal_generated))
 # print(c1,c2,c3)
-# print("new signals="+str(len(new_signals)))	
+# print("new signals="+str(len(new_signals)))
 for key in adr_counts.keys():
-	b_parameters[key]['bet']+=N
-	b_parameters[key]['bet1']+=adr_counts[key]
+    b_parameters[key]['bet'] += N
+    b_parameters[key]['bet1'] += adr_counts[key]
 for key in drug_counts.keys():
-	a_parameters[key]['alp']+=N
-	a_parameters[key]['alp1']+=drug_counts[key]
+    a_parameters[key]['alp'] += N
+    a_parameters[key]['alp1'] += drug_counts[key]
 for drug in drug_matrix.keys():
-	for adr in drug_matrix[drug].keys():
-		g_parameters[drug][adr]+=drug_matrix[drug][adr]
- 
-write_out(a_parameters,b_parameters,g_parameters,"./outputs/alpha.csv","./outputs/beta.csv","./outputs/gamma.csv")
+    for adr in drug_matrix[drug].keys():
+        g_parameters[drug][adr] += drug_matrix[drug][adr]
+
+write_out(a_parameters, b_parameters, g_parameters, "./outputs/alpha.csv", "./outputs/beta.csv", "./outputs/gamma.csv")
 print(count)
-print(time.time()-start)
+print(time.time() - start)
+
+print("\n\n SIGNAL DISTRIBUTION SUMMARY")
+print("Weak Signals   :", c1)
+print("Medium Signals :", c2)
+print("Strong Signals :", c3)
+print("Total Pairs Evaluated :", len(new_signals))
+
+top_signals = [(drug, adr, sig) for drug, adr, sig in new_signals if sig == "Strong Signal"]
+top_signals = top_signals[:20]
+
+print("\n TOP 20 STRONGEST SIGNALS ")
+if top_signals:
+    for i, (drug, adr, sig) in enumerate(top_signals, 1):
+        print(f"{i}. {drug:25s} → {adr:30s} [{sig}]")
+else:
+    print("No strong signals detected in this sample dataset.")
+
+
 print("Required Drug:")
-required_drug=input()
+required_drug = input()
 print("Required ADR:")
-required_adr=input()
-flag=0
+required_adr = input()
+flag = 0
 for t in new_signals:
-	if(t[0]==required_drug and t[1]==required_adr):
-		print(t[2])
-		flag=1
-if(flag==0):
-	print("No Correlation Exists")
+    if (t[0] == required_drug and t[1] == required_adr):
+        print(t[2])
+        flag = 1
+if (flag == 0):
+    print("No Correlation Exists")

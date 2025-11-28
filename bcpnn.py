@@ -84,7 +84,7 @@ for key in drug_reports.keys():
 			drug_counts[drug]+=1
 			N+=1
 			
-a_parameters,b_parameters,g_parameters=read_parameters("alpha.csv","beta.csv","gamma.csv")
+a_parameters,b_parameters,g_parameters=read_parameters("./outputs/alpha.csv","./outputs/beta.csv","./outputs/gamma.csv")
 
 tuple_set=set()
 for drug in drug_matrix.keys():
@@ -131,7 +131,7 @@ for drug in drug_matrix.keys():
 	for adr in drug_matrix[drug].keys():
 		g_parameters[drug][adr]+=drug_matrix[drug][adr]
  
-write_out(a_parameters,b_parameters,g_parameters,"alpha.csv","beta.csv","gamma.csv")
+write_out(a_parameters,b_parameters,g_parameters,"./outputs/alpha.csv","./outputs/beta.csv","./outputs/gamma.csv")
 print(count)
 print(time.time()-start)
 print("Required Drug:")
